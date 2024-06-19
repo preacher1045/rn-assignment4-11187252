@@ -1,30 +1,66 @@
-import React from 'react';
+import {React, memo} from 'react';
 import {View, Text, Image, StyleSheet, TextInput, FlatList, ImageBackground} from 'react-native';
-import { Data, cardColor } from '../constants/data';
+import { Data, cardColor, popularJobs } from '../constants/data';
 
-const Home = ({route}) => {
-    const {name, email} = route.params;
+// component for solving the update and renderTime of our objects.
+const Card = memo(({ item, index }) => {
+    const backgroundColor = cardColor[index % cardColor.length];
+    const marginRight = index === Data.length - 1 ? 0 : 20;
 
-    const renderFeatureJob = ({ item, index }) => (
-        <View style={[styles.card, { backgroundColor: cardColor[index % cardColor.length], marginRight: index === Data.length - 1 ? 0 : 20  }]}>
+    return (
+        <View style={[styles.card, { backgroundColor, marginRight }]}>
             <ImageBackground
-            source={require('../assets/abstructImage.png')}
-            style={styles.cardBackground}
-            imageStyle={styles.imageBackgroundStyle}
-            resizeMode="cover"
+                source={require('../assets/abstructImage.png')}
+                style={styles.cardBackground}
+                imageStyle={styles.imageBackgroundStyle}
+                resizeMode="cover"
             >
-                <View>
-                    <View>
-                        <Image source={item.Image}/>
+                <View style={styles.iconText}>
+                    <View style={styles.logo}>
+                        <Image source={item.Image} style={styles.cardImage} />
                     </View>
-                    <Text>{item.title}</Text>
+                    <View>
+                        <Text style={styles.headerText}>{item.title}</Text>
+                        <Text style={styles.subText}>{item.company}</Text>
+                    </View>
                 </View>
-                <View>
-                    <Text>{item.salary}</Text>
-                    <Text>{item.location}</Text>
+                <View style={styles.infoBlock}>
+                    <Text style={styles.mainInfo}>{item.salary}</Text>
+                    <Text style={styles.mainInfo}>{item.location}</Text>
                 </View>
             </ImageBackground>
         </View>
+    );
+});
+
+const SubCard = memo(({ item }) => {
+
+    return (
+        <View style= {styles.popularcard}>
+            <Image source={item.Image}/>
+            <View>
+                <Text>{item.title}</Text>
+                <Text>{item.company}</Text>
+            </View>
+            <View>
+                <Text>{item.salary}</Text>
+                <Text>{item.location}</Text>
+            </View>
+        </View>
+    );
+});
+
+// Home component
+const Home = ({route}) => {
+    const {name, email} = route.params;
+
+    // renderItems
+    const renderFeatureJob = ({ item, index }) => (
+        <Card item={item} index={index} />
+    );
+
+    const renderpopularJobs = ({ item }) => (
+        <SubCard item={item} />
     );
 
         
@@ -51,11 +87,11 @@ const Home = ({route}) => {
 
             {/* Featured jobs */}
             <View>
-                <View style={styles.feature}>
+                <View style={styles.featureSection}>
                     <Text style={styles.title}>Featured Jobs</Text>
                     <Text style={styles.subTitle}>See all</Text>
                 </View>
-
+                {/* Feature Cards */}
                 <FlatList
                 data={Data}
                 renderItem={renderFeatureJob}
@@ -64,6 +100,21 @@ const Home = ({route}) => {
                 showsHorizontalScrollIndicator={false}
                 />
                 
+            </View>
+
+            <View>
+                <View style={styles.popularSection}>
+                    <Text style={styles.title}>Popular Jobs</Text>
+                    <Text style={styles.subTitle}>See all</Text>
+                </View>
+                 {/* popularJobs Cards */}
+                <FlatList
+                data={Data}
+                renderItem={renderpopularJobs}
+                keyExtractor={item => item.id.toString()}
+                vertical={true}
+                showsVerticalScrollIndicator={false}
+                />
             </View>
         </View>
     );
@@ -141,7 +192,7 @@ const styles =  StyleSheet.create({
         height: 20,
         alignSelf: 'center',
     },
-    feature: {
+    featureSection: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -162,14 +213,64 @@ const styles =  StyleSheet.create({
         width: 280,
         height: 186,
         borderRadius: 24,
-        paddingHorizontal: 20,
-        paddingVertical: 20,
+        paddingHorizontal: 30,
+        paddingVertical: 28,
+        marginTop: 25
     },
     cardBackground: {
         flex: 1,
     },
     imageBackgroundStyle: {
         opacity: 0.3
+    },
+    iconText: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: 20,
+    },
+    logo: {
+        width: 46,
+        height: 46,
+        borderRadius: 12,
+        backgroundColor: '#fff'
+    },
+    cardImage: {
+        width: 30,
+        height: 29.57,
+        alignSelf: 'center',
+        marginTop: 6.5
+    },
+    headerText: {
+        fontSize: 16,
+        fontWeight: '600',
+        lineHeight: 20.8,
+        color: '#fff'
+    },
+    subText: {
+        fontSize: 14,
+        fontWeight: '400',
+        lineHeight: 21,
+        color: '#fff'
+    },
+    infoBlock: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 70
+    },
+    mainInfo: {
+        fontSize: 15,
+        fontWeight: '500',
+        lineHeight: 24,
+        color: '#fff'
+    },
+    popularSection: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginRight: 40,
+        marginVertical: 40
     },
 })
 
