@@ -67,6 +67,7 @@ const Home = ({route}) => {
                 data={popularJobs}
                 renderItem={renderpopularJobs}
                 keyExtractor={item => item.id.toString()}
+                horizontal={false}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 20 }}
                 />
