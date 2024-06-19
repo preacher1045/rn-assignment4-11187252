@@ -1,54 +1,9 @@
 import {React, memo} from 'react';
 import {View, Text, Image, StyleSheet, TextInput, FlatList, ImageBackground} from 'react-native';
-import { Data, cardColor, popularJobs } from '../constants/data';
+import { Data, popularJobs } from '../constants/data';
+import {Card, SubCard} from '../components/index'
 
-// component for solving the update and renderTime of our objects.
-const Card = memo(({ item, index }) => {
-    const backgroundColor = cardColor[index % cardColor.length];
-    const marginRight = index === Data.length - 1 ? 0 : 20;
 
-    return (
-        <View style={[styles.card, { backgroundColor, marginRight }]}>
-            <ImageBackground
-                source={require('../assets/abstructImage.png')}
-                style={styles.cardBackground}
-                imageStyle={styles.imageBackgroundStyle}
-                resizeMode="cover"
-            >
-                <View style={styles.iconText}>
-                    <View style={styles.logo}>
-                        <Image source={item.Image} style={styles.cardImage} />
-                    </View>
-                    <View>
-                        <Text style={styles.headerText}>{item.title}</Text>
-                        <Text style={styles.subText}>{item.company}</Text>
-                    </View>
-                </View>
-                <View style={styles.infoBlock}>
-                    <Text style={styles.mainInfo}>{item.salary}</Text>
-                    <Text style={styles.mainInfo}>{item.location}</Text>
-                </View>
-            </ImageBackground>
-        </View>
-    );
-});
-
-const SubCard = memo(({ item }) => {
-
-    return (
-        <View style= {styles.popularcard}>
-            <Image source={item.Image}/>
-            <View>
-                <Text>{item.title}</Text>
-                <Text>{item.company}</Text>
-            </View>
-            <View>
-                <Text>{item.salary}</Text>
-                <Text>{item.location}</Text>
-            </View>
-        </View>
-    );
-});
 
 // Home component
 const Home = ({route}) => {
@@ -109,11 +64,11 @@ const Home = ({route}) => {
                 </View>
                  {/* popularJobs Cards */}
                 <FlatList
-                data={Data}
+                data={popularJobs}
                 renderItem={renderpopularJobs}
                 keyExtractor={item => item.id.toString()}
-                vertical={true}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
                 />
             </View>
         </View>
@@ -133,7 +88,6 @@ const styles =  StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginTop: 40,
-        // gap: 150
     },
     userName: {
         fontSize: 24,
@@ -209,68 +163,12 @@ const styles =  StyleSheet.create({
         lineHeight: 16.8,
         color: '#95969D'
     },
-    card: {
-        width: 280,
-        height: 186,
-        borderRadius: 24,
-        paddingHorizontal: 30,
-        paddingVertical: 28,
-        marginTop: 25
-    },
-    cardBackground: {
-        flex: 1,
-    },
-    imageBackgroundStyle: {
-        opacity: 0.3
-    },
-    iconText: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        gap: 20,
-    },
-    logo: {
-        width: 46,
-        height: 46,
-        borderRadius: 12,
-        backgroundColor: '#fff'
-    },
-    cardImage: {
-        width: 30,
-        height: 29.57,
-        alignSelf: 'center',
-        marginTop: 6.5
-    },
-    headerText: {
-        fontSize: 16,
-        fontWeight: '600',
-        lineHeight: 20.8,
-        color: '#fff'
-    },
-    subText: {
-        fontSize: 14,
-        fontWeight: '400',
-        lineHeight: 21,
-        color: '#fff'
-    },
-    infoBlock: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 70
-    },
-    mainInfo: {
-        fontSize: 15,
-        fontWeight: '500',
-        lineHeight: 24,
-        color: '#fff'
-    },
     popularSection: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginRight: 40,
-        marginVertical: 40
+        marginVertical: 20
     },
 })
 
